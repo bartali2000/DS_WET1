@@ -1,0 +1,133 @@
+#include "memory"
+#include "wet1util.h"
+using std::unique_ptr,std::shared_ptr;
+
+class AVL_tree {
+    struct  Node{
+        int key;
+        int data;
+        int height = 0;
+        Node* parent = nullptr;
+        unique_ptr<Node> left;
+        unique_ptr<Node> right;
+
+        Node(const int& key,const int& data) : key(key), data(data),left(nullptr), right(nullptr){}
+
+    };
+    unique_ptr<Node> root = nullptr;
+
+    int get_height(Node* n) const {
+        if (n== nullptr) {
+            return -1;
+        } else {
+            return n->height;
+        }
+    }
+
+
+    void update_height(Node* node) {
+        if (node == nullptr) {
+            return;
+        }
+        int h_left = get_height(node->left.get());
+        int h_right = get_height(node->right.get());
+        int max = h_left > h_right ? h_left: h_right;
+        node->height = 1 + max;
+    }
+
+    int balance_factor(Node* node) {
+        if (node == nullptr) return 0;
+        return get_height(node->left.get())-get_height(node->right.get());
+    }
+
+
+    void AVL_LL(unique_ptr<Node>& node) {
+        if (node == nullptr || node->left == nullptr) return;
+        unique_ptr<Node> B = std::move(node); // the old root y
+        unique_ptr<Node> A = std::move(B-> left); // the new  root A , B left is no more and now
+        Node* allparent = B->parent;
+        std::unique_ptr<Node> AR = std::move(A->right);
+        B->left = std::move(AR);
+        if (B->left != nullptr) {
+            B->left->parent = B.get();
+        }
+        A->right= std::move(B);
+        A->right->parent = A.get();
+        A->parent= allparent;
+        node = std::move(A);
+        update_height(node->right.get()); // uppdate the height of OLD ROOT B
+        update_height(node.get());// update height of new root A
+    }
+    void AVL_RR(unique_ptr<Node>& node) {
+        if (node == nullptr || node->right == nullptr) return;
+        unique_ptr<Node> B = std::move(node); // the old root y
+        unique_ptr<Node> A = std::move(B->right); // the new  root A , B left is no more and now
+        Node* allparent = B->parent;
+        std::unique_ptr<Node> AL = std::move(A->left);
+        B->right = std::move(AL);
+        if (B->right != nullptr) {
+            B->right->parent = B.get();
+        }
+        A->left= std::move(B);
+        A->left->parent = A.get();
+        A->parent= allparent;
+        node = std::move(A);
+        update_height(node->left.get()); // uppdate the height of OLD ROOT B
+        update_height(node.get());// update height of new root A
+    }
+
+
+    StatusType AVL_insert(unique_ptr<Node>& node,Node* parent,const int& key,const int& data) {
+        if (node == nullptr) {
+            try {
+                node = std::make_unique<Node>(key,data);
+                node->parent = parent;
+                return StatusType::SUCCESS;
+            } catch (const std::bad_alloc&) {
+                return StatusType::ALLOCATION_ERROR;
+            }
+        }
+        StatusType res;
+        if (key < node->key) {
+            res = AVL_insert(node->left,node.get(), key, data);
+        }else if (key > node->key){
+            res = AVL_insert(node->right,node.get(), key, data);
+        } else {
+            res =StatusType::FAILURE;
+            return res;
+        }
+        if (res != StatusType::SUCCESS) return res;
+        int old_height = node->height;
+        update_height(node.get());
+        if (node->height == old_height) return StatusType::SUCCESS;
+
+        int bf = balance_factor(node.get());
+        if (bf > 1 && balance_factor(node->left.get()) >=0) {
+            AVL_LL(node);
+        } else if(bf > 1 && balance_factor(node->left.get()) == -1){
+            AVL_RR(node->left);
+            AVL_LL(node);
+        } else if (bf < -1 && balance_factor(node->right.get()) <= 0) {
+            AVL_RR(node);
+        }else if (bf < -1 && balance_factor(node->left.get()) == 1) {
+            AVL_LL(node->right);
+            AVL_RR(node);
+        }
+        return StatusType::SUCCESS;
+    }
+
+
+
+
+public:
+    AVL_tree() = default;
+    ~AVL_tree();
+    AVL_tree(const AVL_tree&) = delete;
+    AVL_tree& operator=(const AVL_tree&) = delete;
+
+
+
+    StatusType AVL_tree::insert(const int& key, const int& data) {
+        return AVL_insert(root, nullptr, key, data);
+    }
+};
