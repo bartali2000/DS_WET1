@@ -1,4 +1,4 @@
-#include "memory"
+#include <memory>
 #include "wet1util.h"
 using std::unique_ptr,std::shared_ptr;
 
@@ -161,11 +161,11 @@ class AVL_tree {
 
 public:
     AVL_tree() = default;
-    ~AVL_tree();
+    ~AVL_tree()= default;
     AVL_tree(const AVL_tree&) = delete;
     AVL_tree& operator=(const AVL_tree&) = delete;
 
-
+    data find(const)
     StatusType remove(const int& key) {
         return AVL_remove(root,key);
     }
