@@ -166,8 +166,10 @@ public:
     AVL_tree& operator=(const AVL_tree&) = delete;
 
 
-
-    StatusType AVL_tree::insert(const int& key, const int& data) {
+    StatusType remove(const int& key) {
+        return AVL_remove(root,key);
+    }
+    StatusType insert(const int& key, const int& data) {
         return AVL_insert(root, nullptr, key, data);
     }
 };
