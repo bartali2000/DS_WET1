@@ -165,7 +165,6 @@ public:
     AVL_tree(const AVL_tree&) = delete;
     AVL_tree& operator=(const AVL_tree&) = delete;
 
-    data find(const)
     StatusType remove(const int& key) {
         return AVL_remove(root,key);
     }
