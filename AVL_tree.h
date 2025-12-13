@@ -25,7 +25,7 @@ class AVL_tree {
     }
 
 
-    void update_height(Node* node) {
+    void update_height(Node* node) const{
         if (node == nullptr) {
             return;
         }
@@ -75,6 +75,62 @@ class AVL_tree {
         update_height(node->left.get()); // uppdate the height of OLD ROOT B
         update_height(node.get());// update height of new root A
     }
+    StatusType Rotate_n_updt(unique_ptr<Node>& node) {
+        if (node == nullptr) return StatusType::SUCCESS;
+        int old_height = node->height;
+        update_height(node.get());
+        if (node->height == old_height) return StatusType::SUCCESS;
+
+        int bf = balance_factor(node.get());
+        if (bf > 1 && balance_factor(node->left.get()) >=0) {
+            AVL_LL(node);
+        } else if(bf > 1 && balance_factor(node->left.get()) == -1){
+            AVL_RR(node->left);
+            AVL_LL(node);
+        } else if (bf < -1 && balance_factor(node->right.get()) <= 0) {
+            AVL_RR(node);
+        }else if (bf < -1 && balance_factor(node->right.get()) == 1) {
+            AVL_LL(node->right);
+            AVL_RR(node);
+        }
+        return StatusType::SUCCESS;
+    }
+
+
+
+    StatusType AVL_remove(unique_ptr<Node>& node,const int& key) {
+        if (node == nullptr) return StatusType::FAILURE;
+        StatusType res;
+        if (key < node->key) {
+             res = AVL_remove(node->left, key);
+        }else if (key > node->key){
+            res = AVL_remove(node->right, key);
+        } else {
+            if (node->left == nullptr && node->right == nullptr) { // no children
+                node = nullptr;
+                return res = StatusType::SUCCESS;
+            }else if (node->left != nullptr && node->right == nullptr) { // only left
+                unique_ptr<Node> y = std::move(node);
+                node = std::move(y->left);
+                node->parent= y->parent;
+                return res = StatusType::SUCCESS;
+            }else if (node->left == nullptr && node->right != nullptr) { // only right
+                unique_ptr<Node> y = std::move(node);
+                node = std::move(y->right);
+                node->parent= y->parent;
+                return res = StatusType::SUCCESS;
+            }
+            Node* next_inorder = node->right.get();
+            while (next_inorder->left!= nullptr) {
+                next_inorder = next_inorder->left.get();
+            }
+            node->key= next_inorder->key;
+            node->data= next_inorder->data;
+            res = AVL_remove(node->right,node->key);
+        }
+        if (res != StatusType::SUCCESS) return res;
+        return Rotate_n_updt(node);
+    }
 
 
     StatusType AVL_insert(unique_ptr<Node>& node,Node* parent,const int& key,const int& data) {
@@ -97,23 +153,7 @@ class AVL_tree {
             return res;
         }
         if (res != StatusType::SUCCESS) return res;
-        int old_height = node->height;
-        update_height(node.get());
-        if (node->height == old_height) return StatusType::SUCCESS;
-
-        int bf = balance_factor(node.get());
-        if (bf > 1 && balance_factor(node->left.get()) >=0) {
-            AVL_LL(node);
-        } else if(bf > 1 && balance_factor(node->left.get()) == -1){
-            AVL_RR(node->left);
-            AVL_LL(node);
-        } else if (bf < -1 && balance_factor(node->right.get()) <= 0) {
-            AVL_RR(node);
-        }else if (bf < -1 && balance_factor(node->left.get()) == 1) {
-            AVL_LL(node->right);
-            AVL_RR(node);
-        }
-        return StatusType::SUCCESS;
+        return Rotate_n_updt(node);
     }
 
 
