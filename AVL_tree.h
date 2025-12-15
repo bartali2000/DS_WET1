@@ -26,7 +26,7 @@ class AVL_tree {
     }
 
 
-    void update_height(Node* node) const{
+    void update_height(Node* node){
         if (node == nullptr) {
             return;
         }
@@ -36,7 +36,7 @@ class AVL_tree {
         node->height = 1 + max;
     }
 
-    int balance_factor(Node* node) {
+    int balance_factor(Node* node) const{
         if (node == nullptr) return 0;
         return get_height(node->left.get())-get_height(node->right.get());
     }
@@ -76,9 +76,8 @@ class AVL_tree {
         update_height(node->left.get()); // uppdate the height of OLD ROOT B
         update_height(node.get());// update height of new root A
     }
-    void Rotate_n_updt(unique_ptr<Node>& node) {
+    void Rotate(unique_ptr<Node>& node) {
         if (node == nullptr) return;
-        update_height(node.get());
         int bf = balance_factor(node.get());
         if (bf > 1 && balance_factor(node->left.get()) >=0) {
             AVL_LL(node);
@@ -127,10 +126,11 @@ class AVL_tree {
         }
         if (res != StatusType::SUCCESS) return res;
         int old_height = node->height;
-        Rotate_n_updt(node);
+        update_height(node.get());
         if (node->height == old_height) {
             return StatusType::SUCCESS;
         }
+        Rotate(node);
         return StatusType::SUCCESS;
     }
 
@@ -157,7 +157,7 @@ class AVL_tree {
         int old_height = node->height;
         update_height(node.get());
         if (node->height == old_height) return StatusType::SUCCESS;
-        Rotate_n_updt(node);
+        Rotate(node);
         return StatusType::SUCCESS;
     }
 
