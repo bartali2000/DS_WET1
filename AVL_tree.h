@@ -2,16 +2,18 @@
 #include "wet1util.h"
 using std::unique_ptr,std::shared_ptr;
 
+
+template <typename T>
 class AVL_tree {
     struct  Node {
         int key;
-        int data;
+        T data;
         int height = 0;
         Node* parent = nullptr;
         unique_ptr<Node> left;
         unique_ptr<Node> right;
 
-        Node(const int& key,const int& data) : key(key), data(data),left(nullptr), right(nullptr){}
+        Node(const int& key,const T& data) : key(key), data(data),left(nullptr), right(nullptr){}
     };
     unique_ptr<Node> root = nullptr;
 
@@ -132,7 +134,7 @@ class AVL_tree {
         return StatusType::SUCCESS;
     }
 
-    StatusType AVL_insert(unique_ptr<Node>& node,Node* parent,const int& key,const int& data) {
+    StatusType AVL_insert(unique_ptr<Node>& node,Node* parent,const int& key,const T& data) {
         if (node == nullptr) {
             try {
                 node = std::make_unique<Node>(key,data);
@@ -168,10 +170,11 @@ public:
     AVL_tree(const AVL_tree&) = delete;
     AVL_tree& operator=(const AVL_tree&) = delete;
 
+
     StatusType remove(const int& key) {
         return AVL_remove(root,key);
     }
-    StatusType insert(const int& key, const int& data) {
+    StatusType insert(const int& key, const T& data) {
         return AVL_insert(root, nullptr, key, data);
     }
 };
