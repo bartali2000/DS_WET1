@@ -193,8 +193,8 @@ public:
     bool is_in(const int& key) const{
         return is_in_rec(root,key);
     }
-    T& find(const int& key) {
-        return *find_rec(root,key);
+    T* find(const int& key) {
+        return find_rec(root,key);
     }
 
     StatusType remove(const int& key) {
