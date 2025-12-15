@@ -160,7 +160,28 @@ class AVL_tree {
         Rotate(node);
         return StatusType::SUCCESS;
     }
+    bool is_in_rec(const unique_ptr<Node>& node,const int& key ) const{
+        if (node == nullptr) return false;
+        if (key < node->key) {
+            return is_in_rec(node->left, key);
+        } else if (key > node->key) {
+            return is_in_rec(node->right, key);
+        } else {
+            return true;
+        }
 
+    }
+    T* find_rec(unique_ptr<Node>& node, const int& key) {
+        if (node == nullptr) return nullptr;
+        if (key < node->key) {
+            return find_rec(node->left,key);
+        }else if (key > node->key){
+            return  find_rec(node->right, key);
+        } else {
+            return &(node->data);
+        }
+
+    }
 
 
 
@@ -169,7 +190,12 @@ public:
     ~AVL_tree()= default;
     AVL_tree(const AVL_tree&) = delete;
     AVL_tree& operator=(const AVL_tree&) = delete;
-
+    bool is_in(const int& key) const{
+        return is_in_rec(root,key);
+    }
+    T& find(const int& key) {
+        return *find_rec(root,key);
+    }
 
     StatusType remove(const int& key) {
         return AVL_remove(root,key);
