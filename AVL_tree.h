@@ -3,7 +3,7 @@
 using std::unique_ptr,std::shared_ptr;
 
 class AVL_tree {
-    struct  Node{
+    struct  Node {
         int key;
         int data;
         int height = 0;
@@ -12,7 +12,6 @@ class AVL_tree {
         unique_ptr<Node> right;
 
         Node(const int& key,const int& data) : key(key), data(data),left(nullptr), right(nullptr){}
-
     };
     unique_ptr<Node> root = nullptr;
 
@@ -75,12 +74,9 @@ class AVL_tree {
         update_height(node->left.get()); // uppdate the height of OLD ROOT B
         update_height(node.get());// update height of new root A
     }
-    StatusType Rotate_n_updt(unique_ptr<Node>& node) {
-        if (node == nullptr) return StatusType::SUCCESS;
-        int old_height = node->height;
+    void Rotate_n_updt(unique_ptr<Node>& node) {
+        if (node == nullptr) return;
         update_height(node.get());
-        if (node->height == old_height) return StatusType::SUCCESS;
-
         int bf = balance_factor(node.get());
         if (bf > 1 && balance_factor(node->left.get()) >=0) {
             AVL_LL(node);
@@ -93,7 +89,6 @@ class AVL_tree {
             AVL_LL(node->right);
             AVL_RR(node);
         }
-        return StatusType::SUCCESS;
     }
 
 
@@ -102,7 +97,7 @@ class AVL_tree {
         if (node == nullptr) return StatusType::FAILURE;
         StatusType res;
         if (key < node->key) {
-             res = AVL_remove(node->left, key);
+            res = AVL_remove(node->left, key);
         }else if (key > node->key){
             res = AVL_remove(node->right, key);
         } else {
@@ -129,9 +124,13 @@ class AVL_tree {
             res = AVL_remove(node->right,node->key);
         }
         if (res != StatusType::SUCCESS) return res;
-        return Rotate_n_updt(node);
+        int old_height = node->height;
+        Rotate_n_updt(node);
+        if (node->height == old_height) {
+            return StatusType::SUCCESS;
+        }
+        return StatusType::SUCCESS;
     }
-
 
     StatusType AVL_insert(unique_ptr<Node>& node,Node* parent,const int& key,const int& data) {
         if (node == nullptr) {
@@ -153,7 +152,11 @@ class AVL_tree {
             return res;
         }
         if (res != StatusType::SUCCESS) return res;
-        return Rotate_n_updt(node);
+        int old_height = node->height;
+        update_height(node.get());
+        if (node->height == old_height) return StatusType::SUCCESS;
+        Rotate_n_updt(node);
+        return StatusType::SUCCESS;
     }
 
 
