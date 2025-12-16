@@ -14,13 +14,17 @@
 #define TechSystem26WINTER_WET1_H_
 
 #include "wet1util.h"
+#include "Course.h"
 
 class TechSystem {
 private:
     //
     // Here you may add anything you want
     //
-    
+    AVL_tree<Course> courses;
+    AVL_tree<shared_ptr<Student>> students;
+
+
 public:
     // <DO-NOT-MODIFY> {
     TechSystem();

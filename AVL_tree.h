@@ -196,7 +196,9 @@ public:
     T* find(const int& key) {
         return find_rec(root,key);
     }
-
+    bool is_empty() const{
+        return root == nullptr? true:false;
+    }
     StatusType remove(const int& key) {
         return AVL_remove(root,key);
     }

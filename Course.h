@@ -22,6 +22,9 @@ public:
         student->add_Enrolled_course(1);
         return res;
     }
+    bool has_students() const{
+        return students->is_empty();
+    }
     std::shared_ptr<Student> find_student(const int& studentId) {
         shared_ptr<Student>* student_ptr = students->find(studentId);
         if (student_ptr == nullptr) return nullptr;
@@ -29,7 +32,7 @@ public:
     }
 
 
-    StatusType finish_course(const int& studId) {
+    StatusType finish_course(const int& studId) { // find O(logn) ,remove O(logn) other: O(1) total O(log(n_students))
         if (studId <=0) return StatusType::INVALID_INPUT;
 
         shared_ptr<Student> student = find_student(studId);
