@@ -1,6 +1,7 @@
 #include <memory>
 #include "wet1util.h"
-using std::unique_ptr,std::shared_ptr;
+using std::unique_ptr;
+using std::shared_ptr;
 
 
 template <typename T>

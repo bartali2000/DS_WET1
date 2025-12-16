@@ -23,7 +23,7 @@ public:
         return res;
     }
     bool has_students() const{
-        return students->is_empty();
+        return !students->is_empty();
     }
     std::shared_ptr<Student> find_student(const int& studentId) {
         shared_ptr<Student>* student_ptr = students->find(studentId);
