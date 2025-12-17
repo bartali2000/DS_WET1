@@ -1,3 +1,0 @@
-/home/barak_yanay/projects/data_structure/HW_1/cmake-build-debug/CMakeFiles/HW_1.dir
-/home/barak_yanay/projects/data_structure/HW_1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/barak_yanay/projects/data_structure/HW_1/cmake-build-debug/CMakeFiles/rebuild_cache.dir

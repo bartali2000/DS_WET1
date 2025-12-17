@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/HW_1.dir/main26a1.cpp.o CMakeFiles/HW_1.dir/TechSystem26a1.cpp.o CMakeFiles/HW_1.dir/Student.cpp.o CMakeFiles/HW_1.dir/Course.cpp.o CMakeFiles/HW_1.dir/avl_combined_test.cpp.o -o HW_1 
