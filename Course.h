@@ -15,9 +15,26 @@ public:
     ~Course() = default;
     Course& operator=(const Course&) = default;
     Course(const Course&) = default;
+
     StatusType insert_student(const std::shared_ptr<Student>& student);
     bool has_students() const{
         return !students->is_empty();
     }
-    StatusType finish_course(const int& studId);
+    std::shared_ptr<Student> find_student(const int& studentId);
+
+
+    StatusType finish_course(const int& studId) { // find O(logn) ,remove O(logn) other: O(1) total O(log(n_students))
+        if (studId <=0) return StatusType::INVALID_INPUT;
+
+        shared_ptr<Student> student = find_student(studId);
+        if (student == nullptr) return StatusType::FAILURE;
+
+        StatusType rem_res = students->remove(studId);
+        if (rem_res!= StatusType::SUCCESS) return rem_res;
+
+        student->add_Enrolled_course(-1);
+        student->add_points(this->Points);
+        return StatusType::SUCCESS;
+
+    }
 };

@@ -22,4 +22,8 @@ StatusType Course::finish_course(const int& studId) { // find O(logn) ,remove O(
     student->add_points(this->Points);
     return StatusType::SUCCESS;
 
+}    std::shared_ptr<Student> Course::find_student(const int& studentId) {
+    shared_ptr<Student>* student_ptr = students->find(studentId);
+    if (student_ptr == nullptr) return nullptr;
+    return *student_ptr;
 }
