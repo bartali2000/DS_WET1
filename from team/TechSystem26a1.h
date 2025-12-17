@@ -9,20 +9,18 @@
 // DO NOT modify the preprocessors in this file.
 // DO NOT use the preprocessors in your other code files.
 // 
-#pragma once
+
 #ifndef TechSystem26WINTER_WET1_H_
 #define TechSystem26WINTER_WET1_H_
 
 #include "wet1util.h"
-#include "AVL_Tree_1.h"
-# include "student.h"
-#include "Course.h"
 
 class TechSystem {
 private:
-   AVL_Tree<Student> students;
-   AVL_Tree<Course> courses;
-   int points_award = 0;
+    //
+    // Here you may add anything you want
+    //
+    
 public:
     // <DO-NOT-MODIFY> {
     TechSystem();
@@ -46,9 +44,6 @@ public:
     output_t<int> getStudentPoints(int studentId);
 
     // } </DO-NOT-MODIFY>
-
-    int Get_points_award();
-    void Set_points_award();
 };
 
 #endif // TechSystem26WINTER_WET1_H_
